@@ -1,10 +1,7 @@
 use axum::{extract::Query, routing::get, Router};
-use std::fs;
-
 use serde::{Deserialize, Serialize};
-use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+use std::fs;
+use std::{env, fs::File, io::prelude::*};
 use uuid::Uuid;
 
 #[tokio::main]
