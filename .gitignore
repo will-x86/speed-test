@@ -1,4 +1,5 @@
 .env
 rust/target/
+tui/target/
 bun/node_modules
 node/node_modules
