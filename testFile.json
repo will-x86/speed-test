@@ -1,0 +1,31 @@
+{
+    "string": "This is a string",
+    "number": 42,
+    "boolean": true,
+    "nullValue": null,
+    "array": [
+        1,
+        2,
+        3
+    ],
+    "object": {
+        "key1": "value1",
+        "key2": "value2"
+    },
+    "nestedArray": [
+        "apple",
+        123,
+        false,
+        null,
+        {
+            "nestedObjectKey": "nestedObjectValue"
+        }
+    ],
+    "date": "2023-09-18T12:00:00Z",
+    "regexPattern": "^\\d{3}-\\d{2}$",
+    "emptyString": "",
+    "emptyArray": [],
+    "emptyObject": {},
+    "escapedCharacters": "Escaped characters: \" \\ / \b \f \n \r \t",
+    "unicodeCharacter": "Unicode character: \u00A9"
+}
