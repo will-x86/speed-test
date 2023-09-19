@@ -10,8 +10,6 @@ const server = http.createServer((req, res) => {
         const parsedUrl = url.parse(req.url);
         const queryParamsString = parsedUrl.query;
         const queryParams = querystring.parse(queryParamsString);
-
-
         const id = uuidv4();
         const responseJson = {
             q1: queryParams.q1,
@@ -19,13 +17,8 @@ const server = http.createServer((req, res) => {
             q3: queryParams.q3,
             q4: queryParams.q4,
         };
-
-        console.log(queryParams.q1)
-        console.log(queryParams.q2)
-        const filePath = `./${id}.json`;
+        const filePath = `./json/${id}.json`;
         const jsonContent = JSON.stringify(responseJson);
-        console.log(jsonContent)
-
         fs.writeFile(filePath, jsonContent, (err) => {
             if (err) {
                 console.error(err);
