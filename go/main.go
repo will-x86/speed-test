@@ -3,8 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"os/signal"
+
+	"syscall"
 
 	"github.com/google/uuid"
 )
@@ -14,10 +18,34 @@ func main() {
 
 	port := 3000
 	fmt.Printf("Listening on localhost:%d\n", port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-	if err != nil {
-		panic(err)
-	}
+	go func() {
+		err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	signalChan := make(chan os.Signal, 1)
+
+	signal.Notify(
+		signalChan,
+		syscall.SIGHUP,  // kill -SIGHUP XXXX
+		syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
+		syscall.SIGQUIT, // kill -SIGQUIT XXXX
+		syscall.SIGTERM, // kill -SIGQUIT XXXX
+	)
+
+	<-signalChan
+	log.Print("os.Interrupt - shutting down...\n")
+
+	// terminate after second signal before callback is done
+	go func() {
+		<-signalChan
+		log.Fatal("os.Kill - terminating...\n")
+	}()
+
+	// PERFORM GRACEFUL SHUTDOWN HERE
+
+	os.Exit(0)
 }
 
 type Query struct {
@@ -43,7 +71,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	id := uuid.New().String()
-	filePath := "./" + id
+	filePath := "./json/" + id
 	f, err := os.Create(filePath)
 	if err != nil {
 		panic(err)

@@ -18,7 +18,7 @@ const server = Bun.serve({
                     q4: searchParams.get("q4"),
                 };
 
-                const filePath = `./${id}.json`;
+                const filePath = `./json/${id}.json`;
                 const contents = JSON.stringify(responseJson)
                 await Bun.write(filePath, contents);
                 const f2 = Bun.file(filePath);

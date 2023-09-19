@@ -1,4 +1,4 @@
-module speed-test
+module main.go
 
 go 1.21.1
 

@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require('uuid');
 const url = require('url');
 const querystring = require('querystring');
 
-
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
         const parsedUrl = url.parse(req.url);
@@ -41,7 +40,6 @@ const server = http.createServer((req, res) => {
                         res.end('Internal Server Error');
                         return;
                     }
-
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(data);
                 });
