@@ -3,4 +3,5 @@ rust/target/
 tui/target/
 graphs/target/
 bun/node_modules
-node/node_modules
+node/node_modules/
+node/json
