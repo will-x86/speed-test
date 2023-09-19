@@ -3,12 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
-	"os/signal"
-
-	"syscall"
 
 	"github.com/google/uuid"
 )
@@ -18,34 +14,41 @@ func main() {
 
 	port := 3000
 	fmt.Printf("Listening on localhost:%d\n", port)
-	go func() {
-		err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-		if err != nil {
-			panic(err)
-		}
-	}()
-	signalChan := make(chan os.Signal, 1)
+	/*
+		go func() {
+			err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+			if err != nil {
+				panic(err)
+			}
+		}()
+		signalChan := make(chan os.Signal, 1)
 
-	signal.Notify(
-		signalChan,
-		syscall.SIGHUP,  // kill -SIGHUP XXXX
-		syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
-		syscall.SIGQUIT, // kill -SIGQUIT XXXX
-		syscall.SIGTERM, // kill -SIGQUIT XXXX
-	)
+		signal.Notify(
+			signalChan,
+			syscall.SIGHUP,  // kill -SIGHUP XXXX
+			syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
+			syscall.SIGQUIT, // kill -SIGQUIT XXXX
+			syscall.SIGTERM, // kill -SIGQUIT XXXX
+		)
 
-	<-signalChan
-	log.Print("os.Interrupt - shutting down...\n")
-
-	// terminate after second signal before callback is done
-	go func() {
 		<-signalChan
-		log.Fatal("os.Kill - terminating...\n")
-	}()
+		log.Print("os.Interrupt - shutting down...\n")
 
-	// PERFORM GRACEFUL SHUTDOWN HERE
+		// terminate after second signal before callback is done
+		go func() {
+			<-signalChan
+			log.Fatal("os.Kill - terminating...\n")
+		}()
 
-	os.Exit(0)
+		// PERFORM GRACEFUL SHUTDOWN HERE
+
+		os.Exit(0)
+	*/
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 type Query struct {
