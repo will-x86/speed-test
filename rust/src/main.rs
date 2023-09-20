@@ -8,7 +8,7 @@ use uuid::Uuid;
 async fn main() {
     // build our application with a route
     let app = Router::new().route("/", get(json_handler));
-
+    println!("Started rust server on port 3000");
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(app.into_make_service())
         .await
@@ -40,13 +40,13 @@ async fn json_handler(query_params: Query<QueryPayload>) -> String {
     let j = serde_json::to_vec(&body).expect("error with json to string");
     let id = Uuid::new_v4();
     let current_dir = env::current_dir().expect("error with current dir");
-    let file_path = current_dir.join(&id.to_string());
-
+    let json_path = current_dir.join("json".to_string());
+    let file_path = json_path.join(&id.to_string());
     let mut file = File::create(file_path.clone()).expect("error creating");
     let j_slice: &[u8] = &j;
 
     file.write_all(j_slice).expect("error writing");
-    let mut file = File::open(id.to_string()).expect("error openning");
+    let mut file = File::open(file_path.to_owned()).expect("error openning");
     let mut content = String::new();
     file.read_to_string(&mut content)
         .expect("error turning into string");

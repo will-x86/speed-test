@@ -35,5 +35,5 @@ const server = Bun.serve({
     },
 });
 
-console.log(`Listening on localhost:${server.port}`);
+console.log(`Started bun server on port ${server.port}`);
 

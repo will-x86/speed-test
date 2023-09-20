@@ -13,37 +13,7 @@ func main() {
 	http.HandleFunc("/", jsonHandler)
 
 	port := 3000
-	fmt.Printf("Listening on localhost:%d\n", port)
-	/*
-		go func() {
-			err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-			if err != nil {
-				panic(err)
-			}
-		}()
-		signalChan := make(chan os.Signal, 1)
-
-		signal.Notify(
-			signalChan,
-			syscall.SIGHUP,  // kill -SIGHUP XXXX
-			syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
-			syscall.SIGQUIT, // kill -SIGQUIT XXXX
-			syscall.SIGTERM, // kill -SIGQUIT XXXX
-		)
-
-		<-signalChan
-		log.Print("os.Interrupt - shutting down...\n")
-
-		// terminate after second signal before callback is done
-		go func() {
-			<-signalChan
-			log.Fatal("os.Kill - terminating...\n")
-		}()
-
-		// PERFORM GRACEFUL SHUTDOWN HERE
-
-		os.Exit(0)
-	*/
+	fmt.Printf("Started go server on port %d\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		panic(err)
