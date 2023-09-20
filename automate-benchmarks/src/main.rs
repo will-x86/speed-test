@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let test_configs = vec![
         TestConfig {
             name: "bun-no-params".to_string(),
-            wrk_args: vec!["-t12", "-c400", "-d300s", "http://127.0.0.1:3000/"]
+            wrk_args: vec!["-t12", "-c400", "-d30s", "http://127.0.0.1:3000/"]
                 .into_iter()
                 .map(|s| s.into())
                 .collect(),
@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
         TestConfig {
             name: "node-no-params".to_string(),
-            wrk_args: vec!["-t12", "-c400", "-d300s", "http://127.0.0.1:3000/"]
+            wrk_args: vec!["-t12", "-c400", "-d30s", "http://127.0.0.1:3000/"]
                 .into_iter()
                 .map(|s| s.into())
                 .collect(),
@@ -58,7 +58,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             wrk_args: vec![
                 "-t12",
                 "-c400",
-                "-d300s",
+                "-d30s",
                 "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
             ]
             .into_iter()
@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             wrk_args: vec![
                 "-t12",
                 "-c400",
-                "-d300s",
+                "-d30s",
                 "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
             ]
             .into_iter()
@@ -92,7 +92,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             wrk_args: vec![
                 "-t12",
                 "-c400",
-                "-d300s",
+                "-d30s",
                 "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
             ]
             .into_iter()
@@ -112,7 +112,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             wrk_args: vec![
                 "-t12",
                 "-c400",
-                "-d300s",
+                "-d30s",
                 "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
             ]
             .into_iter()
@@ -213,7 +213,7 @@ fn run_test(
         .spawn()?;
 
     let start_time = Instant::now();
-    let finish_at = start_time + Duration::new(300, 0);
+    let finish_at = start_time + Duration::new(30, 0);
     let mut finished = false;
     let mut x_values = Vec::new();
     let mut cpu_values = Vec::new();
