@@ -30,6 +30,47 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let test_configs = vec![
         TestConfig {
+            name: "bun-no-params".to_string(),
+            wrk_args: vec!["-t12", "-c400", "-d300s", "http://127.0.0.1:3000/"]
+                .into_iter()
+                .map(|s| s.into())
+                .collect(),
+            script_dir: dir_path_to_string("bun_no_params"),
+            script_args: vec!["index.ts"].into_iter().map(|s| s.into()).collect(),
+            build_step_command: None,
+            command: "bun".to_string(),
+            build_step_args: None,
+        },
+        TestConfig {
+            name: "node-no-params".to_string(),
+            wrk_args: vec!["-t12", "-c400", "-d300s", "http://127.0.0.1:3000/"]
+                .into_iter()
+                .map(|s| s.into())
+                .collect(),
+            script_dir: dir_path_to_string("node_no_params"),
+            script_args: vec!["index.js"].into_iter().map(|s| s.into()).collect(),
+            build_step_command: None,
+            command: "node".to_string(),
+            build_step_args: None,
+        },
+        TestConfig {
+            name: "bun".to_string(),
+            wrk_args: vec![
+                "-t12",
+                "-c400",
+                "-d300s",
+                "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
+            ]
+            .into_iter()
+            .map(|s| s.into())
+            .collect(),
+            script_dir: dir_path_to_string("bun"),
+            script_args: vec!["index.ts"].into_iter().map(|s| s.into()).collect(),
+            build_step_command: None,
+            command: "bun".to_string(),
+            build_step_args: None,
+        },
+        TestConfig {
             name: "node".to_string(),
             wrk_args: vec![
                 "-t12",
@@ -65,23 +106,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .into_iter()
                 .map(|s| s.into())
                 .collect(),
-        },
-        TestConfig {
-            name: "bun".to_string(),
-            wrk_args: vec![
-                "-t12",
-                "-c400",
-                "-d300s",
-                "http://127.0.0.1:3000/?q1=1&q2=2&q3=3&q4=4",
-            ]
-            .into_iter()
-            .map(|s| s.into())
-            .collect(),
-            script_dir: dir_path_to_string("bun"),
-            script_args: vec!["index.ts"].into_iter().map(|s| s.into()).collect(),
-            build_step_command: None,
-            command: "bun".to_string(),
-            build_step_args: None,
         },
         TestConfig {
             name: "rust".to_string(),
@@ -163,12 +187,6 @@ fn run_test(
     sys: &mut System,
 ) -> Result<(Vec<u64>, Vec<u64>, Vec<u64>), Box<dyn std::error::Error>> {
     env::set_current_dir(config.script_dir.clone())?;
-    println!(
-        "{} | Press Enter to start build step / server for {}...",
-        config.name, config.name
-    );
-    let mut input_server = String::new();
-    io::stdin().read_line(&mut input_server)?;
     match config.build_step_command.to_owned() {
         Some(cmd) => match config.build_step_args.to_owned() {
             Some(args) => {
@@ -181,17 +199,13 @@ fn run_test(
         },
         None => println!("no build step for {}, continuing", config.name),
     }
+
     let mut server_process = Command::new(&config.command)
         .args(&config.script_args)
         .spawn()?;
     let pid = server_process.id();
-    println!(
-        "{} | Press Enter to start recording and start performance benchmark for {}...",
-        config.name, config.name
-    );
-    let mut input = String::new();
-    io::stdin().read_line(&mut input)?;
-
+    println!("sleeping 10s to ensure all servers are *shutdown* and build step has completed");
+    thread::sleep(time::Duration::from_secs(10));
     let log = File::create(format!("wrk_{}.log", config.name)).expect("failed to open log");
     let mut wrk_command = Command::new("wrk")
         .args(&config.wrk_args)
@@ -232,8 +246,8 @@ fn run_test(
     //kill_process(&config.name)?;
     server_process.kill()?; // Doesn't seem to work with golang
 
-    println!("{} | wrk completed, server process (PID {}) & wrk killed ( waiting 10 seconds to clear up i/o operations)", config.name,pid);
-    thread::sleep(time::Duration::from_secs(10));
+    println!("{} | wrk completed, server process (PID {}) & wrk killed ( waiting 15 seconds to clear up i/o operations)", config.name,pid);
+    thread::sleep(time::Duration::from_secs(15));
 
     Ok((x_values, cpu_values, ram_values))
 }
