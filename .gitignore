@@ -1,7 +1,5 @@
 .env
-rust/target/
-tui/target/
-automate-benchmarks/target/
+target/
 bun/node_modules/
 node/node_modules/
 node/json/
